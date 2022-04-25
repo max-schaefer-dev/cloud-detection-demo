@@ -22,4 +22,3 @@ torchvision
 tqdm
 xarray
 xarray-spatial
-yaml
