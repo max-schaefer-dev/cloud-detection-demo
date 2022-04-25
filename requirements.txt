@@ -7,9 +7,9 @@ geotiff
 markdown
 matplotlib
 numpy
-libgl1
 opencv-python
 pandas
+Pillow
 pip
 pretrainedmodels
 rasterio
