@@ -1,7 +1,24 @@
 import torchmetrics
 import numpy as np
 
-# METRIC
+def IOU(true, pred):
+    """
+    Calls chosen optimizer from the pytorch library.
+
+    Args:
+        true (numpy array): true label (binary image)
+        pred (numpy array): predicted label (binary image)
+
+    Returns:
+        iou_score (float): iou score
+    """
+    intersection = np.logical_and(true, pred)
+    union = np.logical_or(true, pred)
+    iou = intersection.sum() / union.sum()
+
+    iou_score = round(iou, 4)
+
+    return iou_score
 
 def JaccardIndex(pred, true):
     """

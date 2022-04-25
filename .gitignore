@@ -1,2 +1,6 @@
-weights/*
+# Byte-compiled / optimized / DLL files
+__pycache__/
 environment.yml
+
+# weights for models, since size is too large
+weights/*

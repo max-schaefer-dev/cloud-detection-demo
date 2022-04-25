@@ -16,54 +16,25 @@ import pytorch_lightning as pl
 import torch
 
 import streamlit_utils as utl
+import torchmetrics
+from sklearn.metrics import f1_score, jaccard_score, precision_score, recall_score
 from cloud_model import CloudModel
 from utils.config import dict2cfg
-from utils.metrics import JaccardIndex
+from utils.visualize import display_chip_bands, get_xarray, true_color_img
+from utils.metrics import IOU
 
+# Constant variables
 BANDS = ['B02', 'B03', 'B04', 'B08']
 DATA_DIR = Path('./data/')
 CFG_DIR = Path('./configs/')
 AVAILABLE_MODELS = ['Resnet34-Unet', 'EfficientNetB1-Unet', 'Resnext50_32x4d-Unet']
-AVAILABLE_SAMPLES = DATA_DIR.glob('*')
-AVAILABLE_SAMPLES = [os.path.split(chip_id)[1] for chip_id in AVAILABLE_SAMPLES]
+AVAILABLE_SAMPLES = sorted([os.path.split(chip_id)[1] for chip_id in DATA_DIR.glob('*')])
 AVAILABLE_TTA = [0, 1, -1]
 TTA_SETTINGS = [0,1,2,3]
 POSTPROCESS_SETTINGS = ['None', 'Remove small areas', 'Morphological Close', 'Morphological Dilation']
 
 st.set_page_config(layout="wide")
 utl.local_css("./css/streamlit.css")
-
-def get_xarray(filepath):
-    """Put images in xarray.DataArray format"""
-    im_arr = np.array(Image.open(filepath))
-    return xarray.DataArray(im_arr, dims=["y", "x"])
-
-def true_color_img(chip_id):
-    """Given the path to the directory of Sentinel-2 chip feature images,
-    plots the true color image"""
-    chip_dir = DATA_DIR / chip_id
-    red = get_xarray(chip_dir / "B04.tif")
-    green = get_xarray(chip_dir / "B03.tif")
-    blue = get_xarray(chip_dir / "B02.tif")
-
-    return ms.true_color(r=red, g=green, b=blue)
-
-# @st.cache(allow_output_mutation=True)
-def display_chip_bands(chip_id='none'):
-    fig, ax = plt.subplots(1, 5, figsize=(16, 3.5)) #figsize=(20, 10)
-
-    true_color = true_color_img(chip_id)
-    plt.suptitle(f'chip_id: {chip_id}', fontsize=16)
-    ax[0].imshow(true_color)
-    ax[0].set_title('True color')
-
-    for i, band in enumerate(BANDS, 1):
-        datarray = get_xarray(f'./data/{chip_id}/{band}.tif')
-        ax[i].imshow(datarray)
-        ax[i].set_title(band)
-
-    return fig
-
 
 def initialize_model(model_name):
     # Read config file
@@ -116,25 +87,30 @@ def prediction(cloud_model, image_arr, tta_option):
 
     return pred
 
-
-def IOU(true, pred):
-    # Intersection and union totals
-    intersection = np.logical_and(true, pred)
-    union = np.logical_or(true, pred)
-    iou = intersection.sum() / union.sum()
-
-    return round(iou, 4)
-
 # Visualize prediction
 def plot_pred_and_true_label(pred_binary_image):
     fig, ax = plt.subplots(1,3, figsize=(10,4))
     
     true_label = Image.open(DATA_DIR / chip_id / 'label.tif')
-    iou_score = IOU(true_label, pred_binary_image)
+    y_true = np.array(true_label).ravel()
+    y_pred = (pred_binary_image/255).ravel()
+
+    score_df = pd.DataFrame(data=[[0,0,0,0]], columns=['Jaccard', 'Precision', 'Recall', 'F1_score'])
+
+    f1_sc = f1_score(y_true=y_true, y_pred=y_pred)
+    score_df['F1_score'] = f1_sc
+    jaccard_sc = jaccard_score(y_true=y_true, y_pred=y_pred)
+    score_df['Jaccard'] = jaccard_sc
+    recall_sc = recall_score(y_true=y_true, y_pred=y_pred)
+    score_df['Recall'] = recall_sc
+    precision_sc = precision_score(y_true=y_true, y_pred=y_pred)
+    score_df['Precision'] = precision_sc
 
     true_color = true_color_img(chip_id)
 
-    plt.suptitle(f'IoU Score: {iou_score}', fontsize=16)
+    st.caption('<div style="text-align:center;"><h3>Metric Scores</h3></div>', unsafe_allow_html=True)
+
+    st.table(data=score_df)
 
     ax[0].imshow(true_color)
     ax[0].set_title('True color')
@@ -187,7 +163,6 @@ def run_inference(model_choice, chip_id, tta_option):
             
             cloud_model = initialize_model(model_name)
             pred_binary_image = prediction(cloud_model, image_arr, tta_option)
-            # pred_binary_image = model_prediction(cloud_model, image_arr)
 
             stacked_pred.append(pred_binary_image)
 
@@ -202,7 +177,6 @@ def run_inference(model_choice, chip_id, tta_option):
 
     fig = plot_pred_and_true_label(pred_binary_image)
     st.pyplot(fig=fig)   
-    # st.image(image=binary_image, width=250)
 
 # Section: Select sample
 st.title('Cloud Model Demo')
@@ -218,8 +192,6 @@ with col1:
     model_choice = st.multiselect(label='Select model/s', options=AVAILABLE_MODELS)
 with col2:
     tta_option = st.selectbox(label='Select TTA (Test-Time-Augmentations)', options=TTA_SETTINGS)
-    
-# postprocess_option = st.selectbox(label='Select Post-Processing Technique', options=POSTPROCESS_SETTINGS)
 
 # Section: Inference
 st.subheader('Inference', anchor=None)
