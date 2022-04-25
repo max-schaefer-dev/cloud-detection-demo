@@ -1,0 +1,30 @@
+name: cloud_detection_demo
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - matplotlib=3.5.1
+  - numpy=1.21.6
+  - opencv=4.5.3
+  - pandas=1.4.2
+  - py-opencv=4.5.3
+  - python=3.9.12
+  - pytorch-lightning=1.6.1
+  - rasterio=1.2.10
+  - scipy=1.8.0
+  - streamlit=1.8.0
+  - tensorboard=2.8.0
+  - torchmetrics=0.8.0
+  - tqdm=4.64.0
+  - xarray=2022.3.0
+  - xarray-spatial=0.3.3
+  - yaml
+  - pip:
+    - efficientnet-pytorch==0.6.3
+    - munch==2.5.0
+    - pretrainedmodels==0.7.4
+    - segmentation-models-pytorch==0.2.1
+    - timm==0.4.12
+    - torch==1.11.0
+    - torchvision==0.12.0
+prefix: C:\Users\Privat\.conda\envs\cloud_detection_demo
