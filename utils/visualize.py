@@ -4,8 +4,10 @@ import matplotlib.pyplot as plt
 import xarray
 import xrspatial.multispectral as ms
 from pathlib import Path
+import streamlit as st
 
 BANDS=['B02', 'B03', 'B04', 'B08']
+BAND_NAMES=['Blue visible light','Green visible light', 'Red visible light', 'Near infrared light']
 DATA_DIR = Path('./data/')
 
 
@@ -29,13 +31,13 @@ def display_chip_bands(chip_id='none'):
     fig, ax = plt.subplots(1, 5, figsize=(16, 3.5))
 
     true_color = true_color_img(chip_id)
-    plt.suptitle(f'chip_id: {chip_id}', fontsize=16)
+
     ax[0].imshow(true_color)
-    ax[0].set_title('True color')
+    ax[0].set_title('True color (B02+B03+B04)', fontsize=11)
 
     for i, band in enumerate(BANDS, 1):
         datarray = get_xarray(f'./data/{chip_id}/{band}.tif')
         ax[i].imshow(datarray)
-        ax[i].set_title(band)
+        ax[i].set_title(f'{BAND_NAMES[i-1]} ({band})', fontsize=11)
 
     return fig

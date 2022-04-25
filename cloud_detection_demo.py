@@ -6,6 +6,9 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
+from matplotlib import cm
+from matplotlib.colors import ListedColormap
+import matplotlib.patches as mpatches
 
 from PIL import Image
 import streamlit as st
@@ -89,13 +92,13 @@ def prediction(cloud_model, image_arr, tta_option):
 
 # Visualize prediction
 def plot_pred_and_true_label(pred_binary_image):
-    fig, ax = plt.subplots(1,3, figsize=(10,4))
+    fig, ax = plt.subplots(1,4, figsize=(14,7))
     
     true_label = Image.open(DATA_DIR / chip_id / 'label.tif')
     y_true = np.array(true_label).ravel()
     y_pred = (pred_binary_image/255).ravel()
 
-    score_df = pd.DataFrame(data=[[0,0,0,0]], columns=['Jaccard', 'Precision', 'Recall', 'F1_score'])
+    score_df = pd.DataFrame(data=[[0,0,0,0]], columns=['Jaccard', 'F1_score', 'Precision', 'Recall'])
 
     f1_sc = f1_score(y_true=y_true, y_pred=y_pred)
     score_df['F1_score'] = f1_sc
@@ -107,6 +110,11 @@ def plot_pred_and_true_label(pred_binary_image):
     score_df['Precision'] = precision_sc
 
     true_color = true_color_img(chip_id)
+
+    difference = np.array(true_label)-(pred_binary_image/255)
+    # print(np.array(true_label))
+    # print(pred_binary_image/255)
+    # print(difference)
 
     st.caption('<div style="text-align:center;"><h3>Metric Scores</h3></div>', unsafe_allow_html=True)
 
@@ -120,6 +128,37 @@ def plot_pred_and_true_label(pred_binary_image):
 
     ax[2].imshow(true_label)
     ax[2].set_title('True label')
+
+    viridis = cm.get_cmap('viridis', 3)
+    newcolors = viridis(np.linspace(0, 1, 3))
+    red = np.array([256/256, 0/256, 0/256, 1])
+    blue = np.array([256/256, 256/256, 256/256, 1])
+    green = np.array([0/256, 256/256, 0/256, 1])
+    newcolors[0] = red
+    newcolors[1] = blue
+    newcolors[2] = green
+    newcmp = ListedColormap(newcolors)
+
+    ax[3].imshow(difference, cmap=newcmp)
+    red_rect = mpatches.Rectangle(
+    (0.17, 1.035),
+    width=0.05,
+    height=0.05,
+    color="red",
+    transform=ax[3].transAxes,
+    clip_on=False)
+
+    green_rect = mpatches.Rectangle(
+    (0.60, 1.035),
+    width=0.05,
+    height=0.05,
+    color="green",
+    transform=ax[3].transAxes,
+    clip_on=False)
+
+    ax[3].set_title(f'FP    vs.       FN',)
+    ax[3].add_patch(red_rect)
+    ax[3].add_patch(green_rect)
 
     return fig
 
@@ -189,7 +228,7 @@ st.pyplot(fig=figure)
 st.subheader('Select Model & Settings', anchor=None)
 col1, col2 = st.columns([1,1])
 with col1:
-    model_choice = st.multiselect(label='Select model/s', options=AVAILABLE_MODELS)
+    model_choice = st.multiselect(label='Select model/s', options=AVAILABLE_MODELS, default='Resnet34-Unet')
 with col2:
     tta_option = st.selectbox(label='Select TTA (Test-Time-Augmentations)', options=TTA_SETTINGS)
 
@@ -198,4 +237,7 @@ st.subheader('Inference', anchor=None)
 btn_click = st.button('Start Inference')
 
 if btn_click:
+
+    assert model_choice, 'No model has been selected.'
+
     run_inference(model_choice, chip_id, tta_option)
