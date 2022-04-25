@@ -12,6 +12,7 @@ pandas
 Pillow
 pip
 pretrainedmodels
+pytorch-lightning
 rasterio
 scipy
 segmentation-models-pytorch
