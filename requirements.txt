@@ -7,7 +7,7 @@ geotiff
 markdown
 matplotlib
 numpy
-py-opencv
+opencv-python
 pandas
 pip
 pretrainedmodels
