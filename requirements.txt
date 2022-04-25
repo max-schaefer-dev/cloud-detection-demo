@@ -1,0 +1,27 @@
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# platform: win-64
+
+efficientnet-pytorch=0.6.3=pypi_0
+geos=3.8.0=h33f27b4_0
+geotiff=1.7.0=h4545760_0
+markdown=3.3.6=pyhd8ed1ab_0
+matplotlib=3.5.1=py39haa95532_1
+numpy=1.21.6=py39h6331f09_0
+opencv=4.5.3=py39hcbf5309_6
+pandas=1.4.2=py39h2e25243_1
+pip=22.0.4=pyhd8ed1ab_0
+pretrainedmodels=0.7.4=pypi_0
+python=3.9.12=h9a09f29_1_cpython
+rasterio=1.2.10=py39h17c1fa0_0
+scipy=1.8.0=py39hc0c34ad_1
+segmentation-models-pytorch=0.2.1=pypi_0
+streamlit
+timm
+torch=1.11.0=pypi_0
+torchmetrics=0.8.0=pyhd8ed1ab_0
+torchvision=0.12.0=pypi_0
+tqdm=4.64.0
+xarray=2022.3.0=pyhd8ed1ab_0
+xarray-spatial=0.3.3=pyhd8ed1ab_0
+yaml=0.2.5=h8ffe710_2
