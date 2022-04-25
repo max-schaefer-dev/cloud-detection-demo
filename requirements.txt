@@ -7,7 +7,7 @@ geotiff
 markdown
 matplotlib
 numpy
-opencv-python
+opencv-python-headless
 pandas
 Pillow
 pip
