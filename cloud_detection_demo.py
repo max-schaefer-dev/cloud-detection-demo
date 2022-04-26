@@ -48,7 +48,11 @@ def initialize_model(model_name):
     # Download weights
     if not MODEL_WEIGHTS.is_file():
 
-        gdown_id = MODEL_CFG.gdown_id # google drive id
+        # Check if folder for weights exists
+        if not os.path.isdir('weights'):
+            os.mkdir('weights')
+
+        gdown_id = MODEL_CFG.gdown_id # google drive id for model weights
         output = f'weights/{model_name}-512x512.pt'
 
         # Downloading waits and displaying a massage
