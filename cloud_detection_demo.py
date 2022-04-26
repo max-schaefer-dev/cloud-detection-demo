@@ -47,7 +47,6 @@ def initialize_model(model_name):
 
     # Download weights
     if not MODEL_WEIGHTS.is_file():
-
         # Check if folder for weights exists
         if not os.path.isdir('weights'):
             os.mkdir('weights')
@@ -58,11 +57,14 @@ def initialize_model(model_name):
         # Downloading waits and displaying a massage
         with st.spinner(f'Please wait. Downloading {model_name} weights... ({MODEL_CFG.weight_size})'):
             gdown.download(id=gdown_id, output=output, quiet=False)
+
     
     # Initialize model
     cloud_model = CloudModel(bands=BANDS, hparams=cfg_dict)
     cloud_model.load_state_dict(torch.load(MODEL_WEIGHTS))
     cloud_model.eval()
+
+    st.success(f'{model_name} model initialized!')
 
     return cloud_model
 
@@ -137,24 +139,29 @@ def run_inference(model_choice, chip_id, tta_option):
 
     elif len(model_choice) > 1:
 
+        # Initialize model and store in list
+        models = [initialize_model(model_name) for model_name in model_choice]
+
         # Stack all predictions
         stacked_pred = []
-        for model_name in model_choice:
-            
-            cloud_model = initialize_model(model_name)
-            pred_binary_image = prediction(cloud_model, image_arr, tta_option)
 
-            stacked_pred.append(pred_binary_image)
+        with st.spinner(f'Predicting...'):
+            for model in models:
+                
+                # cloud_model = initialize_model(model_name)
+                pred_binary_image = prediction(model, image_arr, tta_option)
 
-        stacked_pred = np.stack(stacked_pred)
-        pred = np.mean(stacked_pred, axis=0) # take mean of all predictions
+                stacked_pred.append(pred_binary_image)
 
-        pred = (pred > 0.5).astype('uint8') # Round values for creating a binary image
-        pred_binary_image = pred*255 # Scale [0,1] to [0,255] to visualize
+            stacked_pred = np.stack(stacked_pred)
+            pred = np.mean(stacked_pred, axis=0) # take mean of all predictions
+
+            pred = (pred > 0.5).astype('uint8') # Round values for creating a binary image
+            pred_binary_image = pred*255 # Scale [0,1] to [0,255] to visualize
     else:
         pass 
 
-
+    
     fig, difference = plot_pred_and_true_label(pred_binary_image, chip_id)
     st.pyplot(fig=fig)
 
@@ -195,13 +202,11 @@ if btn_click:
 
     dst = cv2.addWeighted(true_color_o, 0.6, diff_image, 0.4, 0)
 
+    st.caption('<div style="text-align:center;"><h3>True color with FP-vs-FN Overlay</h3></div>', unsafe_allow_html=True)
 
-    st.caption('<div style="text-align:center;"><h3>Comparison</h3></div>', unsafe_allow_html=True)
-
-    # render image-comparison
     image_comparison(
         img1=Image.fromarray(true_color).convert('RGB'),
         label1='True color',
         img2=Image.fromarray(dst),
-        label2='Prediction'
+        label2='FP-vs-FN'
     )

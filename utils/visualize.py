@@ -58,7 +58,7 @@ def plot_pred_and_true_label(pred_binary_image, chip_id):
     # Display dataframe with scores
     st.caption('<div style="text-align:center;"><h3>Metric Scores</h3></div>', unsafe_allow_html=True)
     score_df = calculate_scores(y_true, y_pred)
-    st.table(data=score_df)
+    st.table(data=score_df.head())
 
     # Setup 1st subplot
     true_color = true_color_img(chip_id)
