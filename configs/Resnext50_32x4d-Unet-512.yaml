@@ -2,6 +2,8 @@ model_name: resnext50_32x4d-unet
 encoder: resnext50_32x4d
 weights: imagenet
 decoder: unet
+gdown_id: 15mL8c9OBPk2JIcPb0k6t_NMtH-mKeVWE
+weight_size: '122.4 MB'
 lr: 8.317637711026709e-05
 seed: 42
 patience: 5

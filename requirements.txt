@@ -2,6 +2,7 @@
 # $ conda create --name <env> --file <this file>
 # platform: win-64
 efficientnet-pytorch
+gdown
 geos
 geotiff
 markdown
@@ -23,5 +24,6 @@ torch
 torchmetrics
 torchvision
 tqdm
+wget
 xarray
 xarray-spatial

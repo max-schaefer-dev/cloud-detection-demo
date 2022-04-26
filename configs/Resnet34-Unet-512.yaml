@@ -2,6 +2,8 @@ model_name: resnet34-unet
 encoder: resnet34
 weights: imagenet
 decoder: unet
+gdown_id: 1uXuxV0j_9cI5oXcSw1mH1mSoPU6SWrYA
+weight_size: '93.4 MB'
 lr: 8.317637711026709e-05
 seed: 42
 patience: 5

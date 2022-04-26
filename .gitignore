@@ -4,3 +4,5 @@ environment.yml
 
 # weights for models, since size is too large
 weights/*
+
+temp/

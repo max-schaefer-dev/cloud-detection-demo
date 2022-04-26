@@ -2,6 +2,8 @@ model_name: efficientnet-b1-unet
 encoder: efficientnet-b1
 weights: imagenet
 decoder: unet
+gdown_id: 1OBesw6cZOZcop-p1X0LHKqdEQy2sYc5n
+weight_size: '33.8 MB'
 lr: 8.317637711026709e-05
 seed: 42
 patience: 5

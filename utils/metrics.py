@@ -1,5 +1,6 @@
-import torchmetrics
 import numpy as np
+import pandas as pd
+from sklearn.metrics import f1_score, jaccard_score, precision_score, recall_score
 
 def IOU(true, pred):
     """
@@ -55,3 +56,18 @@ def IoULoss(pred, true):
     IoU = intersection_over_union(pred, true)
 
     return 1 - IoU
+
+def calculate_scores(y_true, y_pred):
+    score_df = pd.DataFrame(data=[[0,0,0,0]], columns=['Jaccard', 'F1_score', 'Precision', 'Recall'])
+
+    # Calculate scores
+    f1_sc = f1_score(y_true=y_true, y_pred=y_pred)
+    score_df['F1_score'] = f1_sc
+    jaccard_sc = jaccard_score(y_true=y_true, y_pred=y_pred)
+    score_df['Jaccard'] = jaccard_sc
+    recall_sc = recall_score(y_true=y_true, y_pred=y_pred)
+    score_df['Recall'] = recall_sc
+    precision_sc = precision_score(y_true=y_true, y_pred=y_pred)
+    score_df['Precision'] = precision_sc
+
+    return score_df
