@@ -59,8 +59,11 @@ def IoULoss(pred, true):
 
     return 1 - IoU
 
-def calculate_scores(y_true, y_pred):
-    score_df = pd.DataFrame(data=[[0,0,0,0,0]], columns=['Date', 'Jaccard', 'F1_score', 'Precision', 'Recall'])
+def calculate_scores(y_true, y_pred, chip_id):
+    score_df = pd.DataFrame(data=[[0,0,0,0,0,0]], columns=['Chip_id', 'Date', 'Jaccard', 'F1_score', 'Precision', 'Recall'])
+
+    # Add chip_id
+    score_df['Chip_id'] = chip_id
 
     # Add date & time
     now = datetime.now()
@@ -81,10 +84,14 @@ def calculate_scores(y_true, y_pred):
     if not os.path.exists(score_df_path):
         score_df.to_csv(score_df_path, index=False)
     else:
-        temp_score_df = pd.read_csv(score_df_path)
-        frames = [score_df, temp_score_df]
-        score_df = pd.concat(frames)
-        score_df.to_csv(score_df_path, index=False)
+        try:
+            # Open score_df from temp folder and add new run on top
+            temp_score_df = pd.read_csv(score_df_path)
+            frames = [score_df, temp_score_df]
+            score_df = pd.concat(frames)
+            score_df.to_csv(score_df_path, index=False)
+        except:
+            score_df.to_csv(score_df_path, index=False)
 
     score_df = score_df.reset_index(drop=True)
 
