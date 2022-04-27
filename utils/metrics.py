@@ -81,9 +81,8 @@ def calculate_scores(y_true, y_pred, chip_id):
     score_df['Precision'] = precision_sc
 
     score_df_path = 'temp/score_df.csv'
-    if not os.path.exists(score_df_path):
-        score_df.to_csv(score_df_path, index=False)
-    else:
+
+    if os.path.isdir('temp'):
         try:
             # Open score_df from temp folder and add new run on top
             temp_score_df = pd.read_csv(score_df_path)
@@ -92,7 +91,10 @@ def calculate_scores(y_true, y_pred, chip_id):
             score_df.to_csv(score_df_path, index=False)
         except:
             score_df.to_csv(score_df_path, index=False)
-
+    else:
+        os.mkdir('temp')
+        score_df.to_csv(score_df_path, index=False)
+       
     score_df = score_df.reset_index(drop=True)
 
     return score_df
