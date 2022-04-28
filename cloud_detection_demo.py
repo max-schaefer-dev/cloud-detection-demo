@@ -148,7 +148,6 @@ def run_inference(model_choice, chip_id, tta_option):
         with st.spinner(f'Predicting...'):
             for model in models:
                 
-                # cloud_model = initialize_model(model_name)
                 pred_binary_image = prediction(model, image_arr, tta_option)
 
                 stacked_pred.append(pred_binary_image)
@@ -162,7 +161,7 @@ def run_inference(model_choice, chip_id, tta_option):
         pass 
 
     
-    fig, difference = plot_pred_and_true_label(pred_binary_image, chip_id, tta_option, model_name)
+    fig, difference = plot_pred_and_true_label(pred_binary_image, chip_id, tta_option, model_choice)
     st.pyplot(fig=fig)
 
     return pred_binary_image, difference

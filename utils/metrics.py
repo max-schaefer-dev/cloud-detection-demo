@@ -59,7 +59,7 @@ def IoULoss(pred, true):
 
     return 1 - IoU
 
-def calculate_scores(y_true, y_pred, chip_id, tta_option, model_name):
+def calculate_scores(y_true, y_pred, chip_id, tta_option, model_choice):
     score_df = pd.DataFrame(data=[[0,0,0,0,0,0,0,0]], columns=['Date', 'Chip_id', 'Model_name', 'TTA', 'Jaccard', 'F1_score', 'Precision', 'Recall'])
 
     # Add date & time
@@ -71,11 +71,15 @@ def calculate_scores(y_true, y_pred, chip_id, tta_option, model_name):
     score_df['Chip_id'] = chip_id
 
     # Add model_name
-    score_df['Model_name'] = model_name
+    if len(model_choice) > 1:
+        # Shorten model names to fit them all into the column
+        models_str = ', '.join(f'{model_n[:8]}...' for model_n in model_choice)
+        score_df['Model_name'] = models_str
+    else:
+        score_df['Model_name'] = model_choice[0]
 
-    # Add model_name
-    score_df['TTA'] = tta_option
-    score_df['TTA'] = score_df['TTA'].astype('int32')
+    # Add tta_option
+    score_df['TTA'] = int(tta_option)
 
     # Calculate scores
     f1_sc = f1_score(y_true=y_true, y_pred=y_pred)

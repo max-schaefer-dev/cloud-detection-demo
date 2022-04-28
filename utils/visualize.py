@@ -60,6 +60,7 @@ def plot_pred_and_true_label(pred_binary_image, chip_id, tta_option, model_name)
     score_df = calculate_scores(y_true, y_pred, chip_id, tta_option, model_name)
     st.table(data=score_df.head())
 
+    st.caption('<div style="text-align:center;"><h3>Compare prediction & label</h3></div>', unsafe_allow_html=True)
     # Setup 1st subplot
     true_color = true_color_img(chip_id)
     ax[0].imshow(true_color)
@@ -71,7 +72,7 @@ def plot_pred_and_true_label(pred_binary_image, chip_id, tta_option, model_name)
 
     # Setup 3rd subplot
     ax[2].imshow(true_label)
-    ax[2].set_title('True label')
+    ax[2].set_title('Label')
 
     # Setup 4rd subplot
     viridis = cm.get_cmap('viridis', 3)
