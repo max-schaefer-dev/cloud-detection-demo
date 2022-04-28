@@ -162,7 +162,7 @@ def run_inference(model_choice, chip_id, tta_option):
         pass 
 
     
-    fig, difference = plot_pred_and_true_label(pred_binary_image, chip_id)
+    fig, difference = plot_pred_and_true_label(pred_binary_image, chip_id, tta_option, model_name)
     st.pyplot(fig=fig)
 
     return pred_binary_image, difference

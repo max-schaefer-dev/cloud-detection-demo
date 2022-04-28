@@ -48,7 +48,7 @@ def display_chip_bands(chip_id='none'):
     return fig
 
 # Visualize prediction
-def plot_pred_and_true_label(pred_binary_image, chip_id):
+def plot_pred_and_true_label(pred_binary_image, chip_id, tta_option, model_name):
     fig, ax = plt.subplots(1,4, figsize=(14,7))
     
     true_label = Image.open(DATA_DIR / chip_id / 'label.tif')
@@ -57,7 +57,7 @@ def plot_pred_and_true_label(pred_binary_image, chip_id):
 
     # Display dataframe with scores
     st.caption('<div style="text-align:center;"><h3>Metric Scores</h3></div>', unsafe_allow_html=True)
-    score_df = calculate_scores(y_true, y_pred, chip_id)
+    score_df = calculate_scores(y_true, y_pred, chip_id, tta_option, model_name)
     st.table(data=score_df.head())
 
     # Setup 1st subplot
