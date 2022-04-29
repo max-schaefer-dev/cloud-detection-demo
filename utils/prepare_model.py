@@ -1,35 +1,52 @@
+import yaml
+from pathlib import Path
+import torch
+import streamlit as st
 from cloud_model import CloudModel
-from dataset.split import create_folds
-from utils.config import cfg2dict
+from utils.config import dict2cfg
 
-def prepare_model(CFG, df):
-    """
+# Load app_settings
+cfg_dict = yaml.load(open('app_settings.yaml', 'r'), Loader=yaml.FullLoader)
+APP_CFG  = dict2cfg(cfg_dict)
+
+# Constant variables
+CFG_DIR = Path('./configs/')
+
+def prepare_model(model_name):
+    '''
     Creates a CloudModel object with provided CFG and dataframe.
 
     Args:
-        CFG: python class object as config
-        df (pd.DataFrame): dataframe of full dataset
+        moldel_name (str): name of the model
 
     Returns:
         cloud_model (CloudModel): CloudModel object
-    """
+    '''
+    # Read config file
+    cfg_path = CFG_DIR / f'{model_name}-512.yaml'
+    cfg_dict  = yaml.load(open(cfg_path, 'r'), Loader=yaml.FullLoader)
+    MODEL_CFG = dict2cfg(cfg_dict) # dict to class
+    MODEL_WEIGHTS = Path(f'./weights/{model_name}-512x512.pt')
 
-    cfg_dict = cfg2dict(CFG)
+    # Download weights
+    if not MODEL_WEIGHTS.is_file():
+        # Check if folder for weights exists
+        if not os.path.isdir('weights'):
+            os.mkdir('weights')
 
-    if CFG.all_data:
-        train_X, train_y = create_folds(df, CFG.bands, CFG=CFG)
-        val_X, val_y = None, None
-    else:
-        train_X, train_y, val_X, val_y = create_folds(df, CFG.bands, CFG=CFG)
-        
+        gdown_id = MODEL_CFG.gdown_id # google drive id for model weights
+        output = f'weights/{model_name}-512x512.pt'
 
-    cloud_model = CloudModel(
-        bands=CFG.bands,
-        x_train=train_X,
-        y_train=train_y,
-        x_val=val_X,
-        y_val=val_y,
-        hparams=cfg_dict
-    )
+        # Downloading waits and displaying a massage
+        with st.spinner(f'Please wait. Downloading {model_name} weights... ({MODEL_CFG.weight_size})'):
+            gdown.download(id=gdown_id, output=output, quiet=False)
+
+    
+    # Initialize model
+    cloud_model = CloudModel(bands=APP_CFG.bands, hparams=cfg_dict)
+    cloud_model.load_state_dict(torch.load(MODEL_WEIGHTS))
+    cloud_model.eval()
+
+    st.success(f'{model_name} model initialized!')
 
     return cloud_model

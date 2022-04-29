@@ -1,0 +1,33 @@
+bands:
+- B02
+- B03
+- B04
+- B08
+model_names:
+- Resnet34-Unet
+- EfficientNetB1-Unet
+- Resnext50_32x4d-Unet
+available_samples:
+- Sample_1
+- Sample_2
+- Sample_3
+- Sample_4
+postprocess_settings:
+- None
+- Remove all areas
+- Morphological Close
+- Morphological Dilation
+band_names:
+- Blue visible light
+- Green visible light
+- Red visible light
+- Near infrared light
+available_tta:
+- 0
+- 1
+- -1
+tta_settings:
+- 0
+- 1
+- 2
+- 3
