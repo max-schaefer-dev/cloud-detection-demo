@@ -31,6 +31,7 @@ def get_xarray(filepath):
         array (xarray.DataArray): image as xarray.DataArray object
     '''
     im_arr = np.array(Image.open(filepath))
+
     return xarray.DataArray(im_arr, dims=["y", "x"])
 
 def true_color_img(chip_id):
@@ -44,7 +45,7 @@ def true_color_img(chip_id):
     Returns:
         array (ms.true_color): stacked xarray objects
     '''
-    chip_dir = DATA_DIR / chip_id
+    chip_dir = DATA_DIR / chip_id.lower()
     red = get_xarray(chip_dir / "B04.tif")
     green = get_xarray(chip_dir / "B03.tif")
     blue = get_xarray(chip_dir / "B02.tif")
