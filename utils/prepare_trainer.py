@@ -1,15 +1,9 @@
 import pytorch_lightning as pl
 from utils.callbacks import get_callbacks
+from utils.config import Config
 
-def prepare_trainer(CFG):
-    """
-    Creates a pl.Trainer object with provided CFG.
-
-    Args:
-        CFG: python class object as config
-    Returns:
-        iou (pl.Trainer): pytorch lightning Trainer
-    """
+def prepare_trainer(CFG: Config) -> pl.Trainer:
+    '''Creates a pl.Trainer object with provided CFG.'''
 
     limit_val_batches = 0 if CFG.all_data else 1.0
     log_every_n_steps = 1 if CFG.fast_dev_run else 50

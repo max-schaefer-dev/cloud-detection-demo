@@ -12,16 +12,9 @@ APP_CFG  = dict2cfg(cfg_dict)
 # Constant variables
 CFG_DIR = Path('./configs/')
 
-def prepare_model(model_name):
-    '''
-    Creates a CloudModel object with provided CFG and dataframe.
-
-    Args:
-        moldel_name (str): name of the model
-
-    Returns:
-        cloud_model (CloudModel): CloudModel object
-    '''
+def prepare_model(model_name: str) -> CloudModel:
+    '''Creates a CloudModel object with provided CFG and dataframe.'''
+    
     # Read config file
     cfg_path = CFG_DIR / f'{model_name}-512.yaml'
     cfg_dict  = yaml.load(open(cfg_path, 'r'), Loader=yaml.FullLoader)

@@ -1,20 +1,13 @@
 import os
+import torch
 import numpy as np
 import pandas as pd
 from datetime import datetime
 from sklearn.metrics import f1_score, jaccard_score, precision_score, recall_score
 
-def IOU(true, pred):
-    """
-    Calls chosen optimizer from the pytorch library.
+def IOU(true: np.array, pred: np.array) -> float:
+    '''Calculates IOU given the true label and the prediction'''
 
-    Args:
-        true (numpy array): true label (binary image)
-        pred (numpy array): predicted label (binary image)
-
-    Returns:
-        iou_score (float): iou score
-    """
     intersection = np.logical_and(true, pred)
     union = np.logical_or(true, pred)
     iou = intersection.sum() / union.sum()
@@ -23,17 +16,9 @@ def IOU(true, pred):
 
     return iou_score
 
-def JaccardIndex(pred, true):
-    """
-    Calculates intersection and union for a batch of images.
+def JaccardIndex(pred: torch.Tensor, true: torch.Tensor) -> float:
+    '''Calculates intersection and union for a batch of images.'''
 
-    Args:
-        pred (torch.Tensor): a tensor of predictions
-        true (torch.Tensor): a tensor of labels
-
-    Returns:
-        iou (float): total intersection of pixels in percent
-    """
     valid_pixel_mask = true.ne(255)  # valid pixel mask
     true = true.masked_select(valid_pixel_mask).to("cpu")
     pred = pred.masked_select(valid_pixel_mask).to("cpu")
@@ -44,22 +29,16 @@ def JaccardIndex(pred, true):
     iou = intersection.sum() / union.sum()
     return iou
 
-def IoULoss(pred, true):
-    """
-    Calculates IoU loss for a batch of images.
+def IoULoss(pred: torch.Tensor, true: torch.Tensor) -> float:
+    '''Calculates IoU loss for a batch of images.'''
 
-    Args:
-        pred (torch.Tensor): a tensor of predictions
-        true (torch.Tensor): a tensor of labels
-
-    Returns:
-        iou loss (float): 1 - iou
-    """
     IoU = intersection_over_union(pred, true)
 
     return 1 - IoU
 
-def calculate_scores(y_true, y_pred, chip_id, tta_option, model_choice):
+def calculate_scores(y_true: np.array, y_pred: np.array, chip_id: str, tta_option: list, model_choice: list) -> pd.DataFrame:
+    '''Generates DataFrame with F1_score, Jaccard, Recall, Precision'''
+
     score_df = pd.DataFrame(data=[[0,0,0,0,0,0,0,0]], columns=['Date', 'Chip_id', 'Model_name', 'TTA', 'Jaccard', 'F1_score', 'Precision', 'Recall'])
 
     # Add date & time

@@ -8,8 +8,8 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 from PIL import Image
 import streamlit as st
-import streamlit_utils as utl
 from streamlit_image_comparison import image_comparison
+from utils import streamlit_utils as utl
 from utils.config import dict2cfg
 from utils.inference import inference
 from utils.metrics import calculate_scores

@@ -2,8 +2,9 @@ import numpy as np
 import torch
 import cv2
 import yaml
+import streamlit as st
 from utils.visualize import stack_chip_bands
-# from cloud_model import CloudModel
+from cloud_model import CloudModel
 from utils.config import dict2cfg
 from utils.prepare_model import prepare_model
 from utils.visualize import prep_image_dims, stack_chip_bands
@@ -12,8 +13,9 @@ from utils.visualize import prep_image_dims, stack_chip_bands
 cfg_dict = yaml.load(open('app_settings.yaml', 'r'), Loader=yaml.FullLoader)
 APP_CFG  = dict2cfg(cfg_dict)
 
-def prediction(cloud_model, image_arr):
-    # Prediction
+def prediction(cloud_model: CloudModel, image_arr: np.array) -> np.array:
+    '''Predict binary mask for given image array'''
+
     logits = cloud_model.forward(image_arr) # Get raw logits
     pred = torch.softmax(logits, dim=1)[:, 1] # Scale logits between [0,1]
     pred = pred.detach().numpy()
@@ -21,7 +23,9 @@ def prediction(cloud_model, image_arr):
     
     return pred
 
-def prepare_prediction(cloud_model, image_arr, tta_option):
+def prepare_prediction(cloud_model: CloudModel, image_arr: np.array, tta_option: list) -> np.array:
+    '''Prediction pipeline. Stacks predictions and takes average'''
+
     if tta_option != 0: 
         stacked_pred = []
 
@@ -49,7 +53,7 @@ def prepare_prediction(cloud_model, image_arr, tta_option):
 
     return pred
 
-def inference(model_choice, chip_id, tta_option):
+def inference(model_choice: list, chip_id: str, tta_option: list) -> np.array:
 
     image_arr = stack_chip_bands(chip_id)
 
