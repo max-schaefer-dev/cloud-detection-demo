@@ -8,10 +8,10 @@ model_names:
 - EfficientNetB1-Unet
 - Resnext50_32x4d-Unet
 available_samples:
-- Sample_1
-- Sample_2
-- Sample_3
-- Sample_4
+- sample_1
+- sample_2
+- sample_3
+- sample_4
 postprocess_settings:
 - None
 - Remove all areas

@@ -45,7 +45,7 @@ def true_color_img(chip_id):
     Returns:
         array (ms.true_color): stacked xarray objects
     '''
-    chip_dir = DATA_DIR / chip_id.lower()
+    chip_dir = DATA_DIR / chip_id
     red = get_xarray(chip_dir / "B04.tif")
     green = get_xarray(chip_dir / "B03.tif")
     blue = get_xarray(chip_dir / "B02.tif")
