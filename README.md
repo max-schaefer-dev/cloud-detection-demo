@@ -7,6 +7,9 @@
   * Adding TTA
   * Model ensembling
 * Online available: [Cloud Model Demo](https://share.streamlit.io/max-schaefer-dev/cloud-detection-demo/main/cloud_detection_demo.py)
+* To-Do:
+  * add post-processing options
+  * prune and quantized to compress model size & speed up inference 
 
 # Section 1: Choose Run Settings
 
@@ -19,6 +22,6 @@
 # Section 2: Inference
 <img src="assets/inference_section.png" alt="inference_section" />
 
-* 4 metric scores  
-* predicted vs true_label comparison
+* Different metric scores  
+* Predicted vs true_label comparison
 * and more...
