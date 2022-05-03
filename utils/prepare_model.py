@@ -4,7 +4,7 @@ import torch
 import gdown
 from pathlib import Path
 import streamlit as st
-from cloud_model import CloudModel
+from model.cloud_model import CloudModel
 from utils.config import dict2cfg
 
 # Load app_settings

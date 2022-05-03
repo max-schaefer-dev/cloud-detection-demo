@@ -3,7 +3,7 @@ import torch
 import cv2
 import yaml
 import streamlit as st
-from cloud_model import CloudModel
+from model.cloud_model import CloudModel
 from utils.config import dict2cfg
 from utils.prepare_model import prepare_model
 from utils.visualize import prep_image_dims, stack_chip_bands
