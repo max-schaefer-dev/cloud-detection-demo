@@ -1,27 +1,8 @@
-all_data: 1
-batch_size: 8
-bands:
-- B02
-- B03
-- B04
-- B08
-classes: 2
-decoder: unet
-ds_path: data
+# Model config
 encoder: resnext50_32x4d
-epochs: 31
-fast_dev_run: 0
-gdown_id: 15mL8c9OBPk2JIcPb0k6t_NMtH-mKeVWE
 gpu: False
-image_size: 512
-loss: CE
-lr: 8.317637711026709e-05
+
+# Model info
 model_name: resnext50_32x4d-unet
-num_workers: 2
-optimizer: Adam
-patience: 5
-scheduler: cosine
-seed: 42
-selected_folds: 4
-weights: imagenet
+gdown_id: 15mL8c9OBPk2JIcPb0k6t_NMtH-mKeVWE
 weight_size: 122.4 MB
