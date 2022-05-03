@@ -1,7 +1,8 @@
 import yaml
 import os
-from pathlib import Path
 import torch
+import gdown
+from pathlib import Path
 import streamlit as st
 from cloud_model import CloudModel
 from utils.config import dict2cfg
