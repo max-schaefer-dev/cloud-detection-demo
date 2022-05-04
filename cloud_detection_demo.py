@@ -8,11 +8,12 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 from PIL import Image
 import streamlit as st
-from streamlit_image_comparison import image_comparison
 from utils import streamlit_utils as utl
 from utils.config import dict2cfg
+from utils.image_comparison import image_comparison
 from utils.inference import inference
 from utils.metrics import calculate_scores
+from utils.postprocessing import postprocessing
 from utils.visualize import display_chip_bands, true_color_img, plot_pred_and_true_label
 
 # Load app_settings
@@ -35,11 +36,43 @@ st.pyplot(fig=figure)
 
 # Section: Select Model
 st.subheader('Select Model & Settings', anchor=None)
-col1, col2 = st.columns([1,1])
-with col1:
-    model_choice = st.multiselect(label='Select model/s', options=APP_CFG.model_names, default='Resnet34-Unet')
-with col2:
-    tta_option = st.selectbox(label='Select TTA (Test-Time-Augmentations)', options=APP_CFG.tta_settings)
+m_col1, m_col2, m_col3 = st.columns([2,1,1])
+with m_col1:
+    # Choose model/s for inference 
+    model_option = st.multiselect(label='Select model/s', options=APP_CFG.model_names, default='Resnet34-Unet')
+with m_col2:
+    # Select TTA option
+    tta_option = st.number_input(
+        label='Select TTA',
+        min_value=0,
+        max_value=3,
+        step=1,
+        help='Test-Time-Augmentation. 1 = average of 2 predictions (raw pred. & pred. on augmented/flipped image)')
+with m_col3:
+    # Select a treshold
+    threshold_option = st.number_input(label='Select Inference Threshold', min_value=0.0, max_value=1.0, value=0.5, help='Default: 0.50. Values > Treshold get rounded up to 1 (Cloud). Values < Treshold get rounded to 0 (non-cloud)')
+
+# Postprocessing
+pp_col1, pp_col2, pp_col3 = st.columns([2,1,1])
+
+with pp_col1:
+    pp_option = st.selectbox(label='Select PP technique', options=APP_CFG.postprocess_settings, index=0, help='Choose post-processing technique which gets applied to the image after the prediciton.')
+with pp_col2:
+
+    if pp_option == 'Morphological Dilation':
+        active = False
+    else:
+        active = True
+
+    pp_iter_option = st.number_input(label='Iterations', min_value=1, max_value=7, value=1, help='How often should this option be applied? Only used with morph. Dilation.', disabled=active)
+with pp_col3:
+
+    if pp_option != 'None':
+        active = False
+    else:
+        active = True
+
+    pp_kernel_option = st.number_input(label='Kernel size', min_value=2, max_value=7, value=3, help='How big should the kernel be? Default (3,3).', disabled=active)
 
 # Section: Inference
 st.subheader('Inference', anchor=None)
@@ -47,10 +80,14 @@ start_inference = st.button('Start Inference')
 
 if start_inference:
 
-    assert model_choice, 'No model has been selected.'
+    assert model_option, 'No model has been selected.'
 
     # Inference pipeline
-    pred_binary_image = inference(model_choice, chip_id, tta_option)
+    pred_binary_image = inference(model_option, chip_id, tta_option, threshold_option)
+
+    # Postprocessing if selected
+    if pp_option != 'None':
+        pred_binary_image = postprocessing(pred_binary_image, pp_option, pp_iter_option, pp_kernel_option)
 
     # Metric scores table
     true_label = Image.open(DATA_DIR / chip_id / 'label.tif')
@@ -59,7 +96,7 @@ if start_inference:
 
     # Display dataframe with scores
     st.caption('<div style="text-align:center;"><h3>Metric Scores</h3></div>', unsafe_allow_html=True)
-    score_df = calculate_scores(y_true, y_pred, chip_id, tta_option, model_choice)
+    score_df = calculate_scores(y_true, y_pred, chip_id, tta_option, model_option)
     st.table(data=score_df.head())
 
     # Plot true_color, prediction, label & FP vs. FN

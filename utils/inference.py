@@ -52,7 +52,7 @@ def prepare_prediction(cloud_model: CloudModel, image_arr: np.array, tta_option:
 
     return pred
 
-def inference(model_choice: list, chip_id: str, tta_option: list) -> np.array:
+def inference(model_choice: list, chip_id: str, tta_option: list, threshold: float) -> np.array:
 
     image_arr = stack_chip_bands(chip_id)
 
@@ -62,7 +62,7 @@ def inference(model_choice: list, chip_id: str, tta_option: list) -> np.array:
 
         pred = prepare_prediction(cloud_model, image_arr, tta_option)
                 
-        pred = (pred > 0.5).astype('uint8') # Round values > 0.5
+        pred = (pred > threshold).astype('uint8') # Round values > threshold
         pred_binary_image = pred*255 # Scale [0,1] to [0,255] to visualize
 
     elif len(model_choice) > 1:

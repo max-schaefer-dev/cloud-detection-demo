@@ -14,9 +14,9 @@ available_samples:
 - sample_4
 postprocess_settings:
 - None
-- Remove all areas
-- Morphological Close
 - Morphological Dilation
+- Morphological Opening
+- Morphological Closing
 band_names:
 - Blue visible light
 - Green visible light

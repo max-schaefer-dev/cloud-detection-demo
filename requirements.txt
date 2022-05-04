@@ -19,7 +19,6 @@ scipy
 segmentation-models-pytorch
 sklearn
 streamlit
-streamlit-image-comparison
 timm
 torch
 torchmetrics

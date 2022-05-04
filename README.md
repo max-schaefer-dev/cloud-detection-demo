@@ -25,3 +25,6 @@
 * Different metric scores  
 * Predicted vs true_label comparison
 * and more...
+
+# References
+* https://github.com/fcakyon/streamlit-image-comparison
