@@ -32,7 +32,10 @@ def calculate_scores(y_true: np.array, y_pred: np.array, chip_id: str, m_options
     score_df['Threshold'] = round(m_options['threshold_option'], 2)
 
     # Add post-processing
-    score_df['Post-Pro.'] = m_options['pp_option'].split(' ')[1]
+    if m_options['pp_option'] != None:
+        score_df['Post-Pro.'] = m_options['pp_option']
+    else:
+        score_df['Post-Pro.'] = m_options['pp_option'].split(' ')[1]
     score_df['Iter.'] = int(m_options['pp_iter_option'])
     score_df['Kernel_s.'] = int(m_options['pp_kernel_option'])
 
