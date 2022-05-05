@@ -7,11 +7,11 @@ model_names:
 - Resnet34-Unet
 - EfficientNetB1-Unet
 - Resnext50_32x4d-Unet
-available_samples:
-- sample_1
-- sample_2
-- sample_3
-- sample_4
+available_chip_id:
+- chip_id_1
+- chip_id_2
+- chip_id_3
+- chip_id_4
 postprocess_settings:
 - None
 - Morphological Dilation

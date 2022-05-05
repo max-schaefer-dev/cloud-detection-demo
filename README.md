@@ -11,16 +11,20 @@
   * add post-processing options
   * prune and quantized to compress model size & speed up inference 
 
-# Section 1: Choose Run Settings
+# Section 1: Choose sample
 
-<img src="assets/settings_section.png" alt="settings_section" />
+<img src="assets/sample_selection.jpg" alt="settings_section" />
 
 * Choose from 5 different samples
 * Choose one of the models or choose even an ensemble of model you want to predict with (3 in total)
 * Choose how many TTA you want to use (Test-Time Augmentations)
 
-# Section 2: Inference
+# Section 2: Model selection & settings
+<img src="assets/model_settings.jpg" alt="inference_section" />
+
+# Section 3: Inference & analytics
 <img src="assets/inference_section.png" alt="inference_section" />
+
 
 * Different metric scores  
 * Predicted vs true_label comparison

@@ -26,15 +26,15 @@ def get_xarray(filepath: str) -> xarray.DataArray:
 
     im_arr = np.array(Image.open(filepath))
 
-    return xarray.DataArray(im_arr, dims=["y", "x"])
+    return xarray.DataArray(im_arr, dims=['y', 'x'])
 
 def true_color_img(chip_id: str) -> ms.true_color:
     '''Given the path to the directory of Sentinel-2 chip feature images, plots the true color image'''
 
     chip_dir = DATA_DIR / chip_id
-    red = get_xarray(chip_dir / "B04.tif")
-    green = get_xarray(chip_dir / "B03.tif")
-    blue = get_xarray(chip_dir / "B02.tif")
+    red = get_xarray(chip_dir / 'B04.tif')
+    green = get_xarray(chip_dir / 'B03.tif')
+    blue = get_xarray(chip_dir / 'B02.tif')
 
     return ms.true_color(r=red, g=green, b=blue)
 
@@ -75,9 +75,9 @@ def display_chip_bands(chip_id: str ='none') -> plt.Figure:
         ax[i].imshow(datarray)
         ax[i].set_title(f'{APP_CFG.band_names[i-1]} ({band})', fontsize=11)
 
-    return fig
+    st.pyplot(fig=fig)
 
-def plot_pred_and_true_label(pred_binary_image: np.array, chip_id: str, true_label: np.array) -> Union[plt.Figure, np.array]:
+def plot_pred_and_true_label(pred_binary_image: np.array, true_label: np.array, chip_id: str) -> Union[plt.Figure, np.array]:
     '''Plot True Color & all 4 bands in a subplot'''
 
     fig, ax = plt.subplots(1,4, figsize=(14,7))
