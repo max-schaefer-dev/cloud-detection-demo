@@ -1,10 +1,9 @@
 '''Documentation for techniques used: https://opencv24-python-tutorials.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_morphological_ops/py_morphological_ops.html'''
 
 import cv2
-import torch
 import numpy as np
 
-def postprocessing(image: np.array, option: str, iterations: int, k_size: int):
+def postprocessing(image: np.array, option: str, iterations: int, k_size: int) -> np.array:
 
     assert option != 'None', 'Postprocessing triggered, although option "None" selected!'
 
@@ -20,7 +19,7 @@ def postprocessing(image: np.array, option: str, iterations: int, k_size: int):
     return processed_image
 
 
-def morph_dilation(image: np.array, iterations: int = 1, kernel_size: int = 3):
+def morph_dilation(image: np.array, iterations: int = 1, kernel_size: int = 3) -> np.array:
     'Increases the region/size of foreground object.'
 
     kernel = np.ones(kernel_size,np.uint8)
@@ -30,7 +29,7 @@ def morph_dilation(image: np.array, iterations: int = 1, kernel_size: int = 3):
     return processed_image
 
 
-def morph_opening(image: np.array, iteration: int = 1, kernel_size: int = 3):
+def morph_opening(image: np.array, iteration: int = 1, kernel_size: int = 3) -> np.array:
     'Removes noise within the image. Morpological erosion followed by dilation'
 
     kernel = np.ones(kernel_size,np.uint8)
@@ -40,7 +39,7 @@ def morph_opening(image: np.array, iteration: int = 1, kernel_size: int = 3):
     return processed_image
 
 
-def morph_closing(image: np.array, iteration: int = 1, kernel_size: int = 3):
+def morph_closing(image: np.array, iteration: int = 1, kernel_size: int = 3) -> np.array:
     'Closes small holes inside the foreground object. Morpological dilation followed by erosion.'
 
     kernel = np.ones(kernel_size,np.uint8)

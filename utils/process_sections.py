@@ -10,10 +10,10 @@ from utils.metrics import calculate_scores
 from utils.postprocessing import postprocessing
 from utils.visualize import display_chip_bands, plot_pred_and_true_label, true_color_img
 
-
 # Constant variables
 DATA_DIR = Path('./data/')
 CFG_DIR = Path('./configs/')
+
 
 def process_section_1(available_samples: list) -> str:
     '''Displays section title, displays a selectbox for chip_id and returns the selected chip_id'''

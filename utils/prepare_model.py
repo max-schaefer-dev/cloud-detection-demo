@@ -21,17 +21,17 @@ def prepare_model(model_name: str) -> CloudModel:
     cfg_path = CFG_DIR / f'{model_name}-512.yaml'
     cfg_dict  = yaml.load(open(cfg_path, 'r'), Loader=yaml.FullLoader)
     MODEL_CFG = dict2cfg(cfg_dict) # dict to class
-    MODEL_WEIGHTS_P = Path(f'./weights/{model_name}-512x512.pt')
+    MODEL_WEIGHTS_P = Path(f'./weights_1/{model_name}-512x512.pt')
 
     # Download weights
     if not MODEL_WEIGHTS_P.is_file():
         # Check if folder for weights exists
-        if not os.path.isdir('/weights'):
-            os.mkdir('/weights')
+        if not os.path.isdir('/weights_1'):
+            os.mkdir('/weights_1')
             # os.makedirs('temp/weights')
 
         gdown_id = MODEL_CFG.gdown_id # google drive id for model weights
-        output = f'/weights/{model_name}-512x512.pt'
+        output = f'/weights_1/{model_name}-512x512.pt'
 
         # Downloading waits and displaying a massage
         with st.spinner(f'Please wait. Downloading {model_name} weights... ({MODEL_CFG.weight_size})'):

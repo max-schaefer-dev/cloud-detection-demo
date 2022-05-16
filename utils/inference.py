@@ -1,5 +1,5 @@
-import numpy as np
 import torch
+import numpy as np
 import cv2
 import yaml
 import streamlit as st
@@ -12,6 +12,7 @@ from utils.visualize import prep_image_dims, stack_chip_bands
 cfg_dict = yaml.load(open('app_settings.yaml', 'r'), Loader=yaml.FullLoader)
 APP_CFG  = dict2cfg(cfg_dict)
 
+
 def prediction(cloud_model: CloudModel, image_arr: np.array) -> np.array:
     '''Predict binary mask for given image array'''
 
@@ -21,6 +22,7 @@ def prediction(cloud_model: CloudModel, image_arr: np.array) -> np.array:
     pred = np.squeeze(pred, axis=0) # drop batch dim.
     
     return pred
+
 
 def prepare_prediction(cloud_model: CloudModel, image_arr: np.array, tta_option: list) -> np.array:
     '''Prediction pipeline. Stacks predictions and takes average'''
@@ -51,6 +53,7 @@ def prepare_prediction(cloud_model: CloudModel, image_arr: np.array, tta_option:
         pred = prediction(cloud_model, prep_image_arr)
 
     return pred
+
 
 def inference(model_choice: list, chip_id: str, tta_option: list, threshold: float) -> np.array:
 
@@ -83,7 +86,7 @@ def inference(model_choice: list, chip_id: str, tta_option: list, threshold: flo
             stacked_pred = np.stack(stacked_pred)
             pred = np.mean(stacked_pred, axis=0) # take mean of all predictions
 
-            pred = (pred > 0.5).astype('uint8') # Round values for creating a binary image
+            pred = (pred > threshold).astype('uint8') # Round values for creating a binary image
             pred_binary_image = pred*255 # Scale [0,1] to [0,255] to visualize
     else:
         pass 
