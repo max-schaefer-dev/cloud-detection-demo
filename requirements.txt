@@ -21,7 +21,7 @@ segmentation-models-pytorch
 sklearn
 streamlit
 timm
-torch
+torch==1.11.0
 torchmetrics
 torchvision
 tqdm

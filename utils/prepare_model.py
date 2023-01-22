@@ -26,12 +26,11 @@ def prepare_model(model_name: str) -> CloudModel:
     # Download weights
     if not MODEL_WEIGHTS_P.is_file():
         # Check if folder for weights exists
-        if not os.path.isdir('/model_weights'):
-            os.mkdir('/model_weights')
-            # os.makedirs('temp/weights')
+        if not os.path.isdir('./model_weights'):
+            os.mkdir('./model_weights')
 
         gdown_id = MODEL_CFG.gdown_id # google drive id for model weights
-        output = f'/model_weights/{model_name}-512x512.pt'
+        output = f'./model_weights/{model_name}-512x512.pt'
 
         # Downloading waits and displaying a massage
         with st.spinner(f'Please wait. Downloading {model_name} weights... ({MODEL_CFG.weight_size})'):

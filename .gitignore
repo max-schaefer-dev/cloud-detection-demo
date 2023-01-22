@@ -3,6 +3,6 @@ __pycache__/
 environment.yml
 
 # weights for models, since size is too large
-weights/*
+model_weights/*
 
 temp/
