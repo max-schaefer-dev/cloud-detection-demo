@@ -1,0 +1,33 @@
+name: cloud_detection_demo
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - pip
+  - python==3.9.12
+  - pip:
+    - click
+    - efficientnet-pytorch==0.6.3
+    - gdown==4.6.0
+    - matplotlib
+    - munch==2.5.0
+    - numpy
+    - opencv-python
+    - pandas==1.5.2
+    - pillow==9.3.0
+    - pretrainedmodels==0.7.4
+    - pytorch-lightning==1.6.1
+    - pyyaml
+    - rasterio
+    - sahi
+    - scikit-learn==1.0.2
+    - scikit-learn-intelex==2021.7.0
+    - scipy
+    - seaborn
+    - segmentation-models-pytorch==0.2.1
+    - streamlit
+    - timm==0.4.12
+    - torch==1.11.0
+    - torchvision==0.12.0
+    - xarray==2022.11.0
+    - xarray-spatial
